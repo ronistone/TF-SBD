@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+
+          <br>
+          <br>
+        <center>
+      <form method="post">
+        {{form.csrf_token}}
+          <br>
+          {%if form.errors.name%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.name%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">Nome {{ form.name(class="form-control", placeholder="Nome da Agência") }}</label>
+          <br>
+          <br>
+          {%if form.errors.city%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.city%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">Cidade {{ form.city(class="form-control",placeholder="Cidade da Agência") }}</label>
+          <br>
+          <br>
+          {%if form.errors.state%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.state%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">Estado {{ form.state(class="form-control",placeholder="Estado da Agência") }}</label>
+          <br>
+          <br>
+          <button type="submit" class="btn btn-lg btn-primary">Criar</button>
+      </form>
+    </center>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+
+    </div>
+  </div>
+{% endblock %}
