@@ -29,3 +29,13 @@ class User(object):
 
     def __repr__(self):
         return "User: "+str(self.id)+" -- username: "+self.username
+
+class Agencia(object):
+    def getChoice(self):
+        return (self.nome,self.nome)
+
+    def __init__(self,args):
+        for key,value in args.items():
+            setattr(self, key, value)
+    def __repr__(self):
+        return "Agencia: "+self.nome+" -- cidade: "+self.cidade

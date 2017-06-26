@@ -2,7 +2,7 @@ DROP SCHEMA IF EXISTS agencia CASCADE;
 CREATE SCHEMA agencia;
 SET search_path TO agencia;
 CREATE TABLE agencia(
-  nome    VARCHAR(50),
+  nome    VARCHAR(50) ON UPDATE CASCADE ON DELETE NO ACTION,
   cidade  VARCHAR(50),
   estado  VARCHAR(3),
   CONSTRAINT pk_agencia PRIMARY KEY(nome)

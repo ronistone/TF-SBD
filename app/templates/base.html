@@ -76,10 +76,10 @@
                         <a href="{{url_for('criaAgencia')}}">Criar Agência</a>
                     </li>
                     <li>
-                        <a href="#">Ver Agências</a>
+                        <a href="{{url_for('getAgencia',opcao='edit')}}">Ver Agências</a>
                     </li>
                     <li>
-                        <a href="#">Remover Agência</a>
+                        <a href="{{url_for('getAgencia',opcao='delete')}}">Remover Agência</a>
                     </li>
                 </ul>
             </li>
