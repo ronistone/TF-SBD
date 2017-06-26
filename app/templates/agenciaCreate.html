@@ -1,15 +1,17 @@
 {% extends "base.html" %}
+{% block imports%}
+<script language="JavaScript" type="text/javascript" src="{{url_for('static',filename="js/cidades-estados.js")}}"></script>
 
+{% endblock %}
 {% block content %}
   <div id="page-wrapper">
     <div class="container-fluid">
-
           <br>
           <br>
-        <center>
-      <form method="post">
+      <form method="post" align="left">
         {{form.csrf_token}}
           <br>
+          <h2>Criar Agência </h2>
           {%if form.errors.name%}
           <div class="alert alert-danger" role="alert">
             <ul>
@@ -19,21 +21,10 @@
           </ul>
           </div>
           {%endif%}
-           <label class="col-2 col-form-label">Nome {{ form.name(class="form-control", placeholder="Nome da Agência") }}</label>
+           <label class="col-2 col-form-label">{{ form.name(class="form-control", placeholder="Nome da Agência") }}</label>
           <br>
           <br>
-          {%if form.errors.city%}
-          <div class="alert alert-danger" role="alert">
-            <ul>
-            {%for e in form.errors.city%}
-              <li> {{e}} </li>
-            {%endfor%}
-          </ul>
-          </div>
-          {%endif%}
-           <label class="col-2 col-form-label">Cidade {{ form.city(class="form-control",placeholder="Cidade da Agência") }}</label>
-          <br>
-          <br>
+
           {%if form.errors.state%}
           <div class="alert alert-danger" role="alert">
             <ul>
@@ -43,12 +34,31 @@
           </ul>
           </div>
           {%endif%}
-           <label class="col-2 col-form-label">Estado {{ form.state(class="form-control",placeholder="Estado da Agência") }}</label>
+           <label class="col-2 col-form-label">{{ form.state(class="form-control",placeholder="Estado da Agência") }}</label>
+
+          <br>
+          <br>
+
+          {%if form.errors.city%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.city%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">{{ form.city(class="form-control",placeholder="Cidade da Agência") }}</label>
+           <script language="JavaScript" type="text/javascript" charset="utf-8">
+             new dgCidadesEstados({
+               cidade: document.getElementById('cidade'),
+               estado: document.getElementById('estado')
+             })
+           </script>
           <br>
           <br>
           <button type="submit" class="btn btn-lg btn-primary">Criar</button>
       </form>
-    </center>
           <br>
           <br>
           <br>

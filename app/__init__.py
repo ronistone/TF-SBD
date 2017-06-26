@@ -13,7 +13,7 @@ lm.init_app(app)
 conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s port=%s" %(app.config['DB_HOST'],app.config['DB_NAME'],
                                                                         app.config['DB_USER'],app.config['DB_PASSWORD'],
                                                                         app.config['DB_PORT']))
-print('Connection Open')
+print('Conexão Aberta!')
 
 
 
@@ -41,6 +41,8 @@ def initdb():
         user.generate_password()
         cursor.execute("UPDATE users SET password = '"+user.password+"';")
         conn.commit()
+    conn.close()
+    print("Conexão Fechada!")
     print("Tudo Pronto!")
 
 
@@ -48,6 +50,6 @@ import signal
 import sys
 def signal_handler(signal, frame):
         conn.close()
-        print("Connection Close!")
+        print("Conexão Fechada!")
         sys.exit(0)
 signal.signal(signal.SIGINT, signal_handler)

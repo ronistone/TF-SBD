@@ -16,6 +16,8 @@ def criaAgencia():
     form = CreateAgenciaForm()
     cursor = conn.cursor(cursor_factory=DictCursor)
     if form.validate_on_submit():
+        print(form.city.data)
+        print(form.state.data)
         cursor.execute("INSERT INTO agencia(nome,cidade,estado) VALUES('"+
                         form.name.data+"','"+form.city.data+"','"+form.state.data+"');")
         conn.commit()
@@ -27,4 +29,4 @@ def criaAgencia():
 
 @app.route('/example',endpoint='example')
 def exemple():
-    return render_template('bootstrap.html')
+    return render_template('cidades.html')

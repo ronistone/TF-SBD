@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import *#StringField, PasswordField, BooleanField,TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Email
+from app.static.data import estados,cidades
 
 class RegisterForm(FlaskForm):
 	name = StringField("name", validators=[DataRequired()])
@@ -14,8 +15,8 @@ class LoginForm(FlaskForm):
 
 class CreateAgenciaForm(FlaskForm):
 	name = StringField("Nome", validators=[DataRequired()])
-	city = StringField("Cidade", validators=[DataRequired()])
-	state = StringField("Estado", validators=[DataRequired()])
+	city = SelectField("Cidade",choices=cidades,id="cidade")
+	state = SelectField("Estado",choices=estados, id="estado")
 
 class CreateFuncionarioForm(FlaskForm):
 	name = StringField("Nome", validators=[DataRequired()])
