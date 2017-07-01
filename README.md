@@ -32,19 +32,20 @@ Para instalar e executar, siga os seguintes passos:
         $ sudo -i -u postgres
         ```   
         ```
-        # psql  
+        # psql
         ```  
-        CREATE USER nomedousuario SUPERUSER INHERIT CREATEDB CREATEROLE PASSWORD 'qualquerSenha'; 
+        ```
+         CREATE USER nomedousuario SUPERUSER INHERIT CREATEDB CREATEROLE PASSWORD 'qualquerSenha';  
         ```  
         Para sair utilize ``` \q ``` ou pressione Ctrl+D
 8. Crie o banco de dados *agencia* no seu PostgreSQL local   
         ```
         $ sudo -u <usuario> createdb agencia
-        ```
+        ```  
 9. Instale as dependências  
         ```
         $ flask/bin/pip3 install -r requirements.txt
-        ```
+        ```  
 10. Realizar a criação do banco de dados  
         ```
         $ flask initdb  
