@@ -2,11 +2,11 @@ Para instalar e executar, siga os seguintes passos:
 
 1. Clone o repositório  
         ```
-        $ git clone https://github.com/lctheodoro/LibraryFree.git
+        $ git clone https://github.com/ronistone/TF-SBD.git
         ```
 2. Entre no repositório  
         ```
-        $ cd LibraryFree
+        $ cd TF-SBD
         ```
 3. Instale o virtualenv  
         ```
@@ -35,7 +35,7 @@ Para instalar e executar, siga os seguintes passos:
         # createuser <usuario>
         ```  
         Para sair utilize ``` exit ``` ou pressione Ctrl+D
-8. Crie o banco de dados *libraryfree* no seu PostgreSQL local   
+8. Crie o banco de dados *agencia* no seu PostgreSQL local   
         ```
         $ sudo -u <usuario> createdb libraryfree
         ```
@@ -43,36 +43,16 @@ Para instalar e executar, siga os seguintes passos:
         ```
         $ flask/bin/pip3 install -r requirements.txt
         ```
-10. Aplique as variáveis de ambiente  
+10. Realizar a criação do banco de dados  
         ```
-        $ export APP_SETTINGS=config.DevelopmentConfig  
-        ```    
-        ```
-        $ export LIBRARYFREE_DB_URI="postgres:///libraryfree"  
-        ```
-11. Realizar as *migrations* do banco de dados  
-        ```
-        $ python3 run.py db init
+        $ flask initdb  
         ```  
+11. Execute o programa   
         ```
-        $ python3 run.py db migrate
+        $ python3 run.py  
         ```  
-        ```
-        $ python3 run.py db upgrade  
-        ```  
-        ```
-        $ python3 run.py admin  
-        ```  
-12. Execute o programa   
-        ```
-        $ python3 run.py runserver
-        ```  
-13. Execute o servidor de notificações em outro terminal  
-        ```
-        $ python3 run.py notify
-        ```  
-14. Para parar a execução, basta pressionar CTRL+C  
-15. Para sair do *virtualenv*  
+12. Para parar a execução, basta pressionar CTRL+C  
+13. Para sair do *virtualenv*  
         ```
         $ deactivate
         ```
