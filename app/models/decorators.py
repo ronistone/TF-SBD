@@ -1,5 +1,5 @@
 from flask_login import current_user
-from flask import abort, request
+from flask import abort, request, session
 
 def verifica_autorizacao(level):
     def verify(func):
@@ -21,3 +21,9 @@ def verifica_autorizacao_agencia(level):
                 return func(agencia)
         return func_wrapper
     return verify
+
+def destroy_session_argument(func):
+    def wrapper():
+        func()
+        session.pop(current_user.username,None)
+    return wrapper

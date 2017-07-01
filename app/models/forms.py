@@ -6,7 +6,7 @@ from app.static.data import estados,cidades
 class RegisterForm(FlaskForm):
 	name = StringField("name", validators=[DataRequired()])
 	password = PasswordField("password", validators=[DataRequired()])
-	email = StringField("email", validators=[Email()])
+	level = SelectField("level",validators=[DataRequired()])
 
 class LoginForm(FlaskForm):
 	username = StringField('username',validators=[DataRequired()])
@@ -18,6 +18,11 @@ class CreateAgenciaForm(FlaskForm):
 	city = SelectField("Cidade",choices=cidades,id="cidade")
 	state = SelectField("Estado",choices=estados, id="estado")
 
+class CreateFuncionarioForm(FlaskForm):
+	name = StringField("Nome", validators=[DataRequired()])
+	phone = StringField("telefone")
+	agencia = SelectField("Agencia",id="agencia")
+
 class GetAgenciaForm(FlaskForm):
 	agencia = SelectField("Agencia",id="agencia")
 
@@ -25,7 +30,3 @@ class EditAgenciaForm(FlaskForm):
 	nome = StringField("Nome",validators=[DataRequired()])
 	cidade = SelectField("Cidade",choices=cidades,validators=[DataRequired()],id='cidade')
 	estado = SelectField("Estado",choices=estados,validators=[DataRequired()],id='estado')
-
-class CreateFuncionarioForm(FlaskForm):
-	name = StringField("Nome", validators=[DataRequired()])
-	#phone = StringField("Nome",widget=widget.Input(input_type="tel"))

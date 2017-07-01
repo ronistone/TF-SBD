@@ -1,13 +1,11 @@
 from flask import render_template,redirect,url_for, request, flash,abort
-from flask_login import login_user,logout_user, login_required, current_user
-from app import app,lm,conn
-from app.models.tables import User, Agencia
-from app.models.forms import LoginForm,CreateAgenciaForm, GetAgenciaForm, EditAgenciaForm
-from psycopg2.extras import DictCursor
+from flask_login import login_required
+from app import app,conn
+from app.models.tables import Agencia
+from app.models.forms import CreateAgenciaForm, GetAgenciaForm, EditAgenciaForm
 from app.models.decorators import verifica_autorizacao, verifica_autorizacao_agencia
-import psycopg2
-
-
+from psycopg2.extras import DictCursor
+from psycopg2 import IntegrityError
 
 @app.route('/agencia/create',methods=["GET","POST"],endpoint='criaAgencia')
 @login_required
@@ -84,13 +82,9 @@ def deleteAgencia(agencia):
         cursor.execute("DELETE FROM agencia WHERE nome = '%s';" %(data.nome))
         conn.commit()
         return redirect(url_for('getAgencia'))
-    except psycopg2.IntegrityError as error:
+    except IntegrityError as error:
         conn.rollback()
         return render_template("deleteAgencia.html")
     except Exception as error:
         print(error)
         abort(500)
-
-@app.route('/example',endpoint='example')
-def exemple():
-    return render_template('cidades.html')

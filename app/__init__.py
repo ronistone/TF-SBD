@@ -17,7 +17,7 @@ print('Conexão Aberta!')
 
 
 
-from app.controllers import default,agencia
+from app.controllers import default, agencia, funcionario
 from app.models import tables
 
 @app.cli.command()
@@ -33,7 +33,7 @@ def initdb():
             cursor.execute(command+';')
         except Exception as msg:
             print("Erro: ",msg)
-
+    conn.commit()
     cursor.execute("SELECT * FROM users")
     usuario = cursor.fetchall()
     for u in usuario:

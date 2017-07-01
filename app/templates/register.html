@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block imports%}
+<script language="JavaScript" type="text/javascript" src="{{url_for('static',filename="js/cidades-estados.js")}}"></script>
+
+{% endblock %}
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+          <br>
+          <br>
+      <form method="post" align="left">
+        {% with messages = get_flashed_messages() %}
+          <br>
+          {% if messages %}
+          <div class="alert alert-danger" role="alert">
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        {% endwith %}
+        {{form.csrf_token}}
+          <br>
+          <h2>Criar Acesso </h2>
+          {%if form.errors.name%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.name%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">{{ form.name(class="form-control", placeholder="Nome") }}</label>
+          <br>
+          <br>
+
+          {%if form.errors.password%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.password%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">{{ form.password(class="form-control",placeholder="Senha") }}</label>
+
+          <br>
+          <br>
+
+          {%if form.errors.level%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.level%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">{{ form.level(class="form-control",placeholder="Nivel de Acesso") }}</label>
+          <br>
+          <br>
+          <button type="submit" class="btn btn-lg btn-primary">Próximo</button>
+      </form>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+
+    </div>
+  </div>
+{% endblock %}r

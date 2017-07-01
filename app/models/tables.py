@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import json
 class User(object):
 
     @property
@@ -28,6 +28,7 @@ class User(object):
             setattr(self, key, value)
 
     def __repr__(self):
+        #return json.dumps(self.__dict__)
         return "User: "+str(self.id)+" -- username: "+self.username
 
 class Agencia(object):
@@ -39,3 +40,10 @@ class Agencia(object):
             setattr(self, key, value)
     def __repr__(self):
         return "Agencia: "+self.nome+" -- cidade: "+self.cidade
+
+class Funcionario(object):
+    def __init__(self,args):
+        for key,value in args.items():
+            setattr(self, key, value)
+    def __repr__(self):
+        return "Funcionario: "+self.nome+" -- num_funcional: "+self.num_func

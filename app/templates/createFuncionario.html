@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block imports%}
+<script language="JavaScript" type="text/javascript" src="{{url_for('static',filename="js/cidades-estados.js")}}"></script>
+
+{% endblock %}
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+          <br>
+          <br>
+      <form method="post" align="left">
+        {{form.csrf_token}}
+          <br>
+          <h2>Criar Funcionário </h2>
+          {%if form.errors.name%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.name%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+          <br>
+          <label class="col-2 col-form-label"> Usuário: {{sessao.username}}</label>
+          <br>
+          <label class="col-2 col-form-label"> Nivel de Acesso: {{access}}</label>
+          <br>
+           <label class="col-2 col-form-label">{{ form.name(class="form-control", placeholder="Nome do Funcionário") }}</label>
+          <br>
+          <br>
+
+          {%if form.errors.phone%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.phone%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">{{ form.phone(class="form-control",placeholder="(DDD)9 2345-6789") }}</label>
+
+          <br>
+          <br>
+
+          {%if form.errors.agencia%}
+          <div class="alert alert-danger" role="alert">
+            <ul>
+            {%for e in form.errors.agencia%}
+              <li> {{e}} </li>
+            {%endfor%}
+          </ul>
+          </div>
+          {%endif%}
+           <label class="col-2 col-form-label">{{ form.agencia(class="form-control") }}</label>
+          <br>
+          <br>
+          <button type="submit" class="btn btn-lg btn-primary">Criar</button>
+      </form>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+
+    </div>
+  </div>
+{% endblock %}
