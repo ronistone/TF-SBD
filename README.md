@@ -32,12 +32,14 @@ Para instalar e executar, siga os seguintes passos:
         $ sudo -i -u postgres
         ```   
         ```
-        # createuser <usuario>
+        # psql  
         ```  
-        Para sair utilize ``` exit ``` ou pressione Ctrl+D
+        CREATE USER nomedousuario SUPERUSER INHERIT CREATEDB CREATEROLE PASSWORD 'qualquerSenha'; 
+        ```  
+        Para sair utilize ``` \q ``` ou pressione Ctrl+D
 8. Crie o banco de dados *agencia* no seu PostgreSQL local   
         ```
-        $ sudo -u <usuario> createdb libraryfree
+        $ sudo -u <usuario> createdb agencia
         ```
 9. Instale as dependências  
         ```
