@@ -60,4 +60,4 @@ Para instalar e executar, siga os seguintes passos:
         $ deactivate
         ```
 
-Certifique-se de sempre realizar os passos 5 e 10 novamente em execuções futuras.
+Certifique-se de sempre realizar os passos 5 e 11 novamente em execuções futuras.
