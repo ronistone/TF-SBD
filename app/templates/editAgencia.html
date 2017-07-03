@@ -11,6 +11,17 @@
           <br>
       <form method="post" align="left">
         {{form.csrf_token}}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="alert alert-warning" role="alert">
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        {% endwith %}
         <p> Nome: {{form.nome(class="form-control",value=agencia.nome)}}    </p>
         <p> Estado: {{form.estado(class="form-control",value=agencia.estado)}}  </p>
         <p> Cidade: {{form.cidade(class="form-control",value=agencia.cidade)}}  </p>

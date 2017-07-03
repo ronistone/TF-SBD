@@ -3,6 +3,9 @@ from flask_login import LoginManager
 from psycopg2.extras import DictCursor
 import psycopg2
 import os
+import locale
+locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+
 
 app = Flask(__name__)
 app.config.from_object('config')

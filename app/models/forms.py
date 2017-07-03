@@ -30,3 +30,11 @@ class EditAgenciaForm(FlaskForm):
 	nome = StringField("Nome",validators=[DataRequired()])
 	cidade = SelectField("Cidade",choices=cidades,validators=[DataRequired()],id='cidade')
 	estado = SelectField("Estado",choices=estados,validators=[DataRequired()],id='estado')
+
+class EditFuncionarioForm(FlaskForm):
+	nome = StringField("Nome")
+	telefone = StringField("telefone")
+	nome_ag = SelectField("Agencia",id="agencia")
+	level = SelectField("acesso", choices=[('0',"Cliente"),('1',"Funcionario"),('2',"Gerente"),('3',"Administrador")],id="acesso")
+	password = PasswordField('password')
+	youpassword = PasswordField('youpassword',validators=[DataRequired()])

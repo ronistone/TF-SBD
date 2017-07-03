@@ -14,9 +14,9 @@ def user_loader(id):
     cursor = conn.cursor(cursor_factory=DictCursor)
     cursor.execute("SET search_path TO agencia;")
     if id[1]:
-        cursor.execute("SELECT * FROM users INNER JOIN funcionario ON id_user = users.id WHERE users.id = " + str(id[0])+";")
+        cursor.execute("SELECT * FROM users INNER JOIN funcionario ON num_func = users.id WHERE users.id = " + str(id[0])+";")
     else:
-        cursor.execute("SELECT * FROM users INNER JOIN cliente ON id_user = users.id WHERE users.id = " + str(id[0])+";")
+        cursor.execute("SELECT * FROM users INNER JOIN cliente ON num_func = users.id WHERE users.id = " + str(id[0])+";")
     user = cursor.fetchone()
     if user is None:
         return None
@@ -76,7 +76,7 @@ def logout():
 def register():
     path = request.args.get('path')
     if path is None or (path == 'funcionario' and path == 'cliente'):
-        flash('Para criar um usuario use o menu a direita!')
+        flash('Para criar um usuário use o menu a direita!')
         return redirect(url_for('dashboard'))
     form = RegisterForm()
     if path == 'cliente':
@@ -97,7 +97,7 @@ def register():
             cursor.execute("SELECT COUNT(id) FROM users WHERE username = '%s'" %(user.username))
             di = cursor.fetchone()
             if di[0] != 0:
-                flash('Usuario ja utilizado')
+                flash('Usuário já utilizado')
                 return redirect(url_for('register',path=path))
             session[current_user.username] = user.__dict__
             if path != "cliente":

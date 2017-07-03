@@ -17,39 +17,33 @@ CREATE TABLE users(
   CONSTRAINT ck_level CHECK(level >= 0 AND level <= 3)
 );
 CREATE TABLE funcionario(
-  num_func      SERIAL,
+  num_func      INTEGER PRIMARY KEY,
   nome          VARCHAR(50) NOT NULL,
   telefone      CHAR(12) NOT NULL,
   data_admissao DATE DEFAULT NOW(),
-  id_user       INTEGER NOT NULL,
   nome_ag       VARCHAR(50),
-  CONSTRAINT fk_agencia FOREIGN KEY(nome_ag) REFERENCES agencia ON UPDATE CASCADE ON DELETE NO ACTION,
-  CONSTRAINT fk_user    FOREIGN KEY(id_user) REFERENCES users,
-  CONSTRAINT pk_func    PRIMARY KEY(num_func)
+  CONSTRAINT fk_agencia FOREIGN KEY(nome_ag) REFERENCES agencia ON UPDATE CASCADE ON DELETE NO ACTION
 );
 CREATE TABLE cliente(
-  id        SERIAL,
+  id        INTEGER PRIMARY KEY,
   nome      VARCHAR(30) NOT NULL,
   cpf       VARCHAR(12) NOT NULL,
   data_nasc DATE,
   endereco  VARCHAR(60),
   cidade    VARCHAR(60),
   estado    VARCHAR(3),
-  telefone  VARCHAR(12),
-  id_user     INTEGER NOT NULL,
-  CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users,
-  CONSTRAINT pk_cliente PRIMARY KEY(id)
+  telefone  VARCHAR(12)
 );
 INSERT INTO users(username,password,level,is_func)  VALUES('roni','1234',3,'TRUE');
 INSERT INTO users(username,password,level,is_func)  VALUES('ronistone','1234',2,'TRUE');
 INSERT INTO users(username,password,level,is_func)  VALUES('ronistonejunior','1234',1,'TRUE');
 INSERT INTO users(username,password)                VALUES('jose','1234');
 INSERT INTO agencia(nome,cidade,estado)             VALUES('Banco Do Brasil','Araguari','MG');
-INSERT INTO funcionario(nome,telefone,id_user,nome_ag)
+INSERT INTO funcionario(nome,telefone,num_func,nome_ag)
                                                     VALUES ('Roni','034991280104',1,'Banco Do Brasil');
-INSERT INTO funcionario(nome,telefone,id_user,nome_ag)
+INSERT INTO funcionario(nome,telefone,num_func,nome_ag)
                                                     VALUES ('Ronistone','034991280104',2,'Banco Do Brasil');
-INSERT INTO funcionario(nome,telefone,id_user,nome_ag)
+INSERT INTO funcionario(nome,telefone,num_func,nome_ag)
                                                     VALUES ('Ronistone Junior','034991280104',3,'Banco Do Brasil');
-INSERT INTO cliente(nome,cpf,data_nasc,endereco,cidade,estado,telefone,id_user)
+INSERT INTO cliente(nome,cpf,data_nasc,endereco,cidade,estado,telefone,id)
                                                     VALUES('Ronistone','11525491628','05-09-1997','Rua Coronel Povoa, 795','Araguari','MG','034991280104',4);

@@ -22,7 +22,7 @@ def criaAgencia():
 
 @app.route('/agencia/get',methods=["GET","POST"], endpoint='getAgencia')
 @login_required
-@verifica_autorizacao(3)
+@verifica_autorizacao(1)
 def getAgencia():
     form = GetAgenciaForm()
     cursor = conn.cursor(cursor_factory=DictCursor)
@@ -42,6 +42,8 @@ def getAgencia():
             return redirect(url_for('editAgencia',agencia=form.agencia.data))
         elif opcao == 'delete':
             return redirect(url_for('deleteAgencia',agencia=form.agencia.data))
+        elif opcao == 'funcionario':
+            return redirect(url_for('getFuncionario',agencia=form.agencia.data))
         else:
             flash("Ocorreu um problema!")
     return render_template('getAgencia.html', form = form)
@@ -84,7 +86,8 @@ def deleteAgencia(agencia):
         return redirect(url_for('getAgencia'))
     except IntegrityError as error:
         conn.rollback()
-        return render_template("deleteAgencia.html")
+        flash("Você não pode deletar esta agência contas, funcionários ou clientes dependem dela!")
+        return redirect(url_for('getAgencia'))
     except Exception as error:
         print(error)
         abort(500)

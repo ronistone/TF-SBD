@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block imports%}
+<script language="JavaScript" type="text/javascript" src="{{url_for('static',filename="js/cidades-estados.js")}}"></script>
+
+{% endblock %}
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+          <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      {% endwith %}
+      <br><br>
+      <table class="table table-bordered table-striped table-responsive">
+        <thead>
+        <tr>
+          <th class="text-center">
+            Número Funcional<br>
+          </th>
+          <th class="text-center">
+            Nome<br>
+          </th>
+          <th class="text-center">
+            Telefone<br>
+          </th>
+          <th class="text-center">
+            Data Admissao<br>
+          </th>
+          <th class="text-center">
+            Agência<br>
+          </th>
+          <th class="text-center">
+            Usuário<br>
+          </th>
+          <th class="text-center">
+            Nível de Acesso<br>
+          </th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for funcionario in funcionarios%}
+        <tr>
+          <th class="text-center" scope="row">{{funcionario.num_func}}</th>
+          <td>{{funcionario.nome}}</td>
+          <td>{{funcionario.telefone}}</td>
+          <td>{{funcionario.data_admissao.strftime("%w de %B %Y")}}</td>
+          <td>{{funcionario.nome_ag}}</td>
+          <td>{{funcionario.username}}</td>
+          {% if current_user.level >= 2 or funcionario.num_func == current_user.num_func %}
+          <td colspan="1">{{access[funcionario.level]}}</td>
+          <td><a href="{{url_for('editFuncionario',num_func=funcionario.num_func)}}" class="btn btn-info" role="button">Editar</a>
+            {% if current_user.level >= 2%}
+            <a href="{{url_for('deleteFuncionario',num_func=funcionario.num_func)}}" class="btn btn-info" role="button">Deletar</a><td>
+            {% endif %}
+          {% else %}
+          <td colspan="2">{{access[funcionario.level]}}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+          <br><br>
+
+    </div>
+  </div>
+{% endblock %}

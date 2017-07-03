@@ -26,6 +26,7 @@
     {%block imports%}
 
     {% endblock %}
+    <link rel="icon" href="{{url_for('static', filename='image/banco.jpg')}}">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -92,7 +93,7 @@
                         <a href="/register?path=funcionario">Cadastrar Funcionário</a>
                     </li>
                     <li>
-                        <a href="#">Ver Funcionários</a>
+                        <a href="{{url_for('getAgencia',opcao='funcionario')}}">Ver Funcionários</a>
                     </li>
                     <li>
                         <a href="#">Remover Funcionário</a>
