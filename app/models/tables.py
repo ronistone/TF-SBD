@@ -42,8 +42,12 @@ class Agencia(object):
         return "Agencia: "+self.nome+" -- cidade: "+self.cidade
 
 class Funcionario(object):
+    def getChoice(self):
+        return (str(self.num_func),self.nome)
+
     def __init__(self,args):
         for key,value in args.items():
             setattr(self, key, value)
+
     def __repr__(self):
         return "Funcionario: "+self.nome+" -- num_funcional: "+self.num_func

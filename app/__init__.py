@@ -20,7 +20,7 @@ print('Conexão Aberta!')
 
 
 
-from app.controllers import default, agencia, funcionario
+from app.controllers import default, agencia, funcionario, cliente
 from app.models import tables
 
 @app.cli.command()

@@ -23,6 +23,16 @@ class CreateFuncionarioForm(FlaskForm):
 	phone = StringField("telefone")
 	agencia = SelectField("Agencia",id="agencia")
 
+class CreateClienteForm(FlaskForm):
+	nome = StringField("Nome", validators=[DataRequired()])
+	telefone = StringField("Telefone")
+	gerente = SelectField("Gerente",id="gerente")
+	cpf = StringField("CPF",validators=[DataRequired()])
+	data_nasc = DateField("Nascimento", validators=[DataRequired()])
+	endereco = StringField("Endereco", validators=[DataRequired()])
+	city = SelectField("Cidade",choices=cidades,id="cidade")
+	state = SelectField("Estado",choices=estados, id="estado")
+
 class GetAgenciaForm(FlaskForm):
 	agencia = SelectField("Agencia",id="agencia")
 

@@ -27,12 +27,14 @@ CREATE TABLE funcionario(
 CREATE TABLE cliente(
   id        INTEGER PRIMARY KEY,
   nome      VARCHAR(30) NOT NULL,
-  cpf       VARCHAR(12) NOT NULL,
+  cpf       VARCHAR(15) NOT NULL,
   data_nasc DATE,
   endereco  VARCHAR(60),
   cidade    VARCHAR(60),
   estado    VARCHAR(3),
-  telefone  VARCHAR(12)
+  telefone  VARCHAR(12),
+  id_gerente INTEGER,
+  CONSTRAINT fk_gerente FOREIGN KEY(id_gerente) REFERENCES funcionario ON UPDATE CASCADE ON DELETE NO ACTION
 );
 INSERT INTO users(username,password,level,is_func)  VALUES('roni','1234',3,'TRUE');
 INSERT INTO users(username,password,level,is_func)  VALUES('ronistone','1234',2,'TRUE');
@@ -46,4 +48,4 @@ INSERT INTO funcionario(nome,telefone,num_func,nome_ag)
 INSERT INTO funcionario(nome,telefone,num_func,nome_ag)
                                                     VALUES ('Ronistone Junior','034991280104',3,'Banco Do Brasil');
 INSERT INTO cliente(nome,cpf,data_nasc,endereco,cidade,estado,telefone,id)
-                                                    VALUES('Ronistone','11525491628','05-09-1997','Rua Coronel Povoa, 795','Araguari','MG','034991280104',4);
+                                                    VALUES('José da Silva','11525491628','05-09-1997','Rua Coronel Povoa, 795','Araguari','MG','034991280104',4);
