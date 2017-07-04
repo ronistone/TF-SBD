@@ -22,6 +22,7 @@ class CreateFuncionarioForm(FlaskForm):
 	name = StringField("Nome", validators=[DataRequired()])
 	phone = StringField("telefone")
 	agencia = SelectField("Agencia",id="agencia")
+	supervisor = SelectField("supervisor",id="supervisor")
 
 class CreateClienteForm(FlaskForm):
 	nome = StringField("Nome", validators=[DataRequired()])
@@ -42,9 +43,20 @@ class EditAgenciaForm(FlaskForm):
 	estado = SelectField("Estado",choices=estados,validators=[DataRequired()],id='estado')
 
 class EditFuncionarioForm(FlaskForm):
-	nome = StringField("Nome")
 	telefone = StringField("telefone")
 	nome_ag = SelectField("Agencia",id="agencia")
 	level = SelectField("acesso", choices=[('0',"Cliente"),('1',"Funcionario"),('2',"Gerente"),('3',"Administrador")],id="acesso")
+	password = PasswordField('password')
+	youpassword = PasswordField('youpassword',validators=[DataRequired()])
+	supervisor = SelectField("supervisor",id="supervisor")
+
+class EditClienteForm(FlaskForm):
+	id_gerente = SelectField("Gerente",id="gerente")
+	cpf = StringField("CPF",validators=[DataRequired()])
+	data_nasc = DateField("Nascimento", validators=[DataRequired()])
+	endereco = StringField("Endereco", validators=[DataRequired()])
+	cidade = SelectField("Cidade",choices=cidades,id="cidade")
+	estado = SelectField("Estado",choices=estados, id="estado")
+	telefone = StringField("telefone")
 	password = PasswordField('password')
 	youpassword = PasswordField('youpassword',validators=[DataRequired()])

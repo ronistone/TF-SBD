@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block imports%}
+<script language="JavaScript" type="text/javascript" src="{{url_for('static',filename="js/cidades-estados.js")}}"></script>
+
+{% endblock %}
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+          <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      {% endwith %}
+      <br><br>
+      <table class="table table-bordered table-striped table-responsive">
+        <thead>
+        <tr>
+          <th class="text-center">
+            Nome<br>
+          </th>
+          <th class="text-center">
+            CPF<br>
+          </th>
+          <th class="text-center">
+            Telefone<br>
+          </th>
+          <th class="text-center">
+            Data de Nascimento<br>
+          </th>
+          <th class="text-center">
+            Gerente<br>
+          </th>
+          <th class="text-center">
+            Endereço<br>
+          </th>
+          <th class="text-center">
+            Cidade<br>
+          </th>
+          <th class="text-center">
+            Estado<br>
+          </th>
+          <th class="text-center">
+            Usuário<br>
+          </th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for cliente in clientes%}
+        <tr>
+          <th class="text-center" scope="row">{{cliente.nome}}</th>
+          <td>{{cliente.cpf}}</td>
+          <td>{{cliente.telefone}}</td>
+          <td>{{cliente.data_nasc.strftime("%w de %B %Y")}}</td>
+          <td>{{cliente.gerente}}</td>
+          <td>{{cliente.endereco}}</td>
+          <td>{{cliente.cidade}}</td>
+          <td>{{cliente.estado}}</td>
+          <td>{{cliente.username}}</td>
+          {% if current_user.level >= 2%}
+          <td colspan="2"><a href="{{url_for('editCliente',num_func=cliente.id)}}" class="btn btn-info" role="button">Editar</a>
+          <a href="{{url_for('deleteCliente',num_func=cliente.id)}}" class="btn btn-info" role="button">Excluir</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+          <br><br>
+
+    </div>
+  </div>
+{% endblock %}

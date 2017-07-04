@@ -16,7 +16,7 @@ def user_loader(id):
     if id[1]:
         cursor.execute("SELECT * FROM users INNER JOIN funcionario ON num_func = users.id WHERE users.id = " + str(id[0])+";")
     else:
-        cursor.execute("SELECT * FROM users INNER JOIN cliente ON num_func = users.id WHERE users.id = " + str(id[0])+";")
+        cursor.execute("SELECT * FROM users INNER JOIN cliente ON cliente.id = users.id WHERE users.id = " + str(id[0])+";")
     user = cursor.fetchone()
     if user is None:
         return None

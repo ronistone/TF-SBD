@@ -17,7 +17,8 @@ def criaAgencia():
         cursor.execute("INSERT INTO agencia(nome,cidade,estado) VALUES('"+
                         form.name.data+"','"+form.city.data+"','"+form.state.data+"');")
         conn.commit()
-        return redirect(url_for('dashboard'))
+        flash("Agência Criada!")
+        return redirect(url_for('getAgencia'))
     return render_template('agenciaCreate.html',form=form)
 
 @app.route('/agencia/get',methods=["GET","POST"], endpoint='getAgencia')
@@ -44,6 +45,8 @@ def getAgencia():
             return redirect(url_for('deleteAgencia',agencia=form.agencia.data))
         elif opcao == 'funcionario':
             return redirect(url_for('getFuncionario',agencia=form.agencia.data))
+        elif opcao == 'cliente':
+            return redirect(url_for('getCliente',ger="-1",agencia=form.agencia.data))
         else:
             flash("Ocorreu um problema!")
     return render_template('getAgencia.html', form = form)
@@ -65,6 +68,7 @@ def editAgencia(agencia):
     if form.validate_on_submit():
         cursor.execute("UPDATE agencia set nome = '%s', cidade = '%s', estado = '%s' WHERE nome = '%s';" %(form.nome.data,form.cidade.data,form.estado.data,data.nome))
         conn.commit()
+        flash("Agência Editada!")
         return redirect(url_for('editAgencia',agencia=form.nome.data))
     return render_template('editAgencia.html',agencia=data,form=form)
 
@@ -83,6 +87,7 @@ def deleteAgencia(agencia):
     try:
         cursor.execute("DELETE FROM agencia WHERE nome = '%s';" %(data.nome))
         conn.commit()
+        flash("Agência Deletada!")
         return redirect(url_for('getAgencia'))
     except IntegrityError as error:
         conn.rollback()

@@ -22,6 +22,17 @@
       {% endwith %}
       <label class="col-2 col-form-label"> Nome: {{user.nome}}    </label>
       <br>
+      {%if form.errors.cpf%}
+      <div class="alert alert-danger" role="alert">
+        <ul>
+        {%for e in form.errors.cpf%}
+          <li> {{e}} </li>
+        {%endfor%}
+      </ul>
+      </div>
+      {%endif%}
+       <label class="col-2 col-form-label">CPF: {{ form.cpf(class="form-control",value=user.cpf) }}</label>
+      <br>
       {%if form.errors.telefone%}
       <div class="alert alert-danger" role="alert">
         <ul>
@@ -33,29 +44,16 @@
       {%endif%}
       <label class="col-2 col-form-label"> Telefone: {{form.telefone(class="form-control",value=user.telefone)}}  </label>
       <br>
-      {%if form.errors.nome_ag%}
+      {%if form.errors.data_nasc%}
       <div class="alert alert-danger" role="alert">
         <ul>
-        {%for e in form.errors.nome_ag%}
+        {%for e in form.errors.data_nasc%}
           <li> {{e}} </li>
         {%endfor%}
       </ul>
       </div>
       {%endif%}
-      <label class="col-2 col-form-label"> Agencia: {{form.nome_ag(class="form-control",value=user.nome_ag)}}  </label>
-      {% if current_user.level > 1%}
-      <br>
-      {%if form.errors.level%}
-      <div class="alert alert-danger" role="alert">
-        <ul>
-        {%for e in form.errors.level%}
-          <li> {{e}} </li>
-        {%endfor%}
-      </ul>
-      </div>
-      {%endif%}
-      <label class="col-2 col-form-label"> Nivel de Acesso: {{form.level(class="form-control",value=user.level)}}  </label>
-      {% endif %}
+       <label class="col-2 col-form-label"> Data de Nascimento: {{ form.data_nasc(type="date",value=user.data_nasc) }}</label>
       <br>
       {%if form.errors.password%}
       <div class="alert alert-danger" role="alert">
@@ -68,16 +66,57 @@
       {%endif%}
       <label class="col-2 col-form-label">Senha: {{form.password(class="form-control",placeholder="Nova Senha")}}  </label>
       <br>
-      {%if form.errors.supervisor%}
+      {%if form.errors.endereco%}
       <div class="alert alert-danger" role="alert">
         <ul>
-        {%for e in form.errors.supervisor%}
+        {%for e in form.errors.endereco%}
           <li> {{e}} </li>
         {%endfor%}
       </ul>
       </div>
       {%endif%}
-      <label class="col-2 col-form-label"> Supervisor: {{ form.supervisor(class="form-control") }}</label>
+       <label class="col-2 col-form-label">Endereço: {{ form.endereco(class="form-control", value=user.endereco) }}</label>
+      <br>
+      {%if form.errors.estado%}
+      <div class="alert alert-danger" role="alert">
+        <ul>
+        {%for e in form.errors.estado%}
+          <li> {{e}} </li>
+        {%endfor%}
+      </ul>
+      </div>
+      {%endif%}
+       <label class="col-2 col-form-label">Estado: {{ form.estado(class="form-control",value=user.estado) }}</label>
+
+      <br>
+      <br>
+      {%if form.errors.cidade%}
+      <div class="alert alert-danger" role="alert">
+        <ul>
+        {%for e in form.errors.cidade%}
+          <li> {{e}} </li>
+        {%endfor%}
+      </ul>
+      </div>
+      {%endif%}
+       <label class="col-2 col-form-label">Cidade: {{ form.cidade(class="form-control",value=user.cidade) }}</label>
+       <script language="JavaScript" type="text/javascript" charset="utf-8">
+         new dgCidadesEstados({
+           cidade: document.getElementById('cidade'),
+           estado: document.getElementById('estado')
+         })
+       </script>
+      <br>
+      {%if form.errors.id_gerente%}
+      <div class="alert alert-danger" role="alert">
+        <ul>
+        {%for e in form.errors.id_gerente%}
+          <li> {{e}} </li>
+        {%endfor%}
+      </ul>
+      </div>
+      {%endif%}
+      <label class="col-2 col-form-label"> Gerente: {{ form.id_gerente(class="form-control") }}</label>
       <br>
       {%if form.errors.youpassword%}
       <div class="alert alert-danger" role="alert">
@@ -89,30 +128,9 @@
       </div>
       {%endif%}
       <label class="col-2 col-form-label">Sua Senha: {{form.youpassword(class="form-control",placeholder="Sua Senha para confirmação")}}</label>
-      <br>
           <br><br>
           <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>
     </form>
     </div>
   </div>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

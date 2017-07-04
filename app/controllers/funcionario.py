@@ -17,30 +17,48 @@ def createFuncionario():
     else:
         sessao = session[current_user.username]
     form = CreateFuncionarioForm()
+    access = ["Cliente","Funcionário","Gerente","Administrador"]
+
     cursor = conn.cursor(cursor_factory=DictCursor)
     cursor.execute("SET search_path TO agencia")
+
+##############   Pegando agências para o form ###########
     cursor.execute("SELECT * FROM agencia")
     di = cursor.fetchall()
     agencia = []
-    access = ["Cliente","Funcionário","Gerente","Administrador"]
     for i in range(0,len(di)):
         d = {}
         for key,value in di[i]._index.items():
             d[key] = di[i][value]
         agencia += [Agencia(d).getChoice()]
     form.agencia.choices = agencia
+#############################################################
+
+###########  Pegando Supervisores para o form ################
+    print(di)
+    cursor.execute("SELECT * FROM funcionario INNER JOIN users ON num_func = id")
+    di = cursor.fetchall()
+    supervisores = []
+    for i in range(0,len(di)):
+        d = {}
+        for key,value in di[i]._index.items():
+            d[key] = di[i][value]
+        supervisores += [Funcionario(d).getChoice()]
+    form.supervisor.choices = supervisores
+###########################################################
+
     if form.validate_on_submit():
         try:
             user = User(sessao)
             user.generate_password()
-            cursor.execute("INSERT INTO users(username,password,level,is_func) VALUES('%s','%s','%s','TRUE')" % (user.username,user.password,user.level))
+            cursor.execute("INSERT INTO users(username,password,level,is_func,nome,telefone) VALUES('%s','%s','%s','TRUE','%s','%s')" % (user.username,user.password,user.level,form.name.data,form.phone.data))
             cursor.execute("SELECT id FROM users WHERE username = '%s'"%(user.username))
             di = cursor.fetchone()
-            cursor.execute("INSERT INTO funcionario(nome,telefone,num_func,nome_ag) VALUES('%s','%s','%s','%s')" % (form.name.data,form.phone.data,di[0],form.agencia.data))
+            cursor.execute("INSERT INTO funcionario(num_func,nome_ag,supervisor) VALUES('%s','%s','%s')" % (di[0],form.agencia.data,form.supervisor.data))
             conn.commit()
             session.pop(current_user.username,None)
             flash("Funcionário Criado!")
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('getFuncionario',agencia=form.agencia.data))
         except IntegrityError as error:
             if error.pgcode == '23505':
                 flash('Usuário já utilizado')
@@ -48,6 +66,7 @@ def createFuncionario():
             return redirect(url_for('register',path='funcionario'))
         except Exception as error:
             conn.rollback()
+            print(error,end="\n\n\n")
             flash('Desculpe, tivemos um problema. Tente novamente!')
             return redirect(url_for('register',path='funcionario'))
     return render_template('createFuncionario.html', access=access[int(sessao['level'])],form=form,sessao=sessao)
@@ -80,19 +99,34 @@ def editFuncionario(num_func):
     form = EditFuncionarioForm()
     cursor = conn.cursor(cursor_factory=DictCursor)
     cursor.execute("SET search_path TO agencia")
+    access = ["Cliente","Funcionário","Gerente","Administrador"]
+
+    ###########  Pegando Agencia para o form ################
     cursor.execute("SELECT * FROM agencia")
     di = cursor.fetchall()
     agencia = []
-    access = ["Cliente","Funcionário","Gerente","Administrador"]
     for i in range(0,len(di)):
         d = {}
         for key,value in di[i]._index.items():
             d[key] = di[i][value]
         agencia += [Agencia(d).getChoice()]
     form.nome_ag.choices = agencia
+    ###########################################################
+
+    ###########  Pegando Supervisores para o form ################
+    cursor.execute("SELECT * FROM funcionario INNER JOIN users ON num_func = id")
+    di = cursor.fetchall()
+    supervisores = []
+    for i in range(0,len(di)):
+        d = {}
+        for key,value in di[i]._index.items():
+            d[key] = di[i][value]
+        supervisores += [Funcionario(d).getChoice()]
+    form.supervisor.choices = supervisores
+    ###########################################################
     cursor.execute("""SELECT * FROM users
-                        INNER JOIN funcionario ON id = num_func
-                        WHERE num_func = '%s'""" %(num_func))
+                    INNER JOIN funcionario ON id = num_func
+                    WHERE num_func = '%s'""" %(num_func))
     di = cursor.fetchone()
     user = {}
     for key,value in di._index.items():
@@ -104,8 +138,8 @@ def editFuncionario(num_func):
             return redirect(url_for('editFuncionario',num_func=num_func))
 
         try:
-            func = ["nome","telefone","nome_ag"]
-            us = ["level","password"]
+            func = ["nome_ag"]
+            us = ["level","password","telefone","nome"]
             insert = ""
             for key,value in form.data.items():
                 if key in func and (type(value) is str and len(value) > 1 or type(value) != str):
@@ -148,3 +182,5 @@ def deleteFuncionario(num_func):
     except Exception as error:
         flash("Tivemos um problema, tente novamente!")
         return redirect(url_for('getFuncionario'))
+
+

@@ -69,6 +69,7 @@
             <li class="active">
                 <a href="{{url_for('dashboard')}}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
             </li>
+          {% if current_user.is_func %}
             {% if current_user.level == 3 %}
             <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#agencia"><i class="fa fa-fw fa-desktop"></i> Agências </a>
@@ -95,9 +96,6 @@
                     <li>
                         <a href="{{url_for('getAgencia',opcao='funcionario')}}">Ver Funcionários</a>
                     </li>
-                    <li>
-                        <a href="#">Remover Funcionário</a>
-                    </li>
                 </ul>
             </li>
             {% endif %}
@@ -106,23 +104,41 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#cliente"><i class="fa fa-user"></i> Clientes </a>
                 <ul id="cliente" class="collapse">
                     <li>
-                        <a href="#">Meus Clientes</a>
+                        <a href="/cliente/get?ger={{current_user.num_func}}">Meus Clientes</a>
                     </li>
                     <li>
                         <a href="/register?path=cliente">Cadastrar Cliente</a>
                     </li>
                     <li>
-                        <a href="#">Ver Cliente</a>
-                    </li>
-                    <li>
-                        <a href="#">Remover Cliente</a>
+                        <a href="/agencia/get?opcao=cliente#">Ver Cliente</a>
                     </li>
                 </ul>
             </li>
             {% endif %}
+          {%endif%}
+          <li>
+            <a href="javascript:;" data-toggle="collapse" data-target="#conta"><i class="fa fa-user"></i> Contas </a>
+            <ul id="conta" class="collapse">
+              {% if current_user.level > 0%}
+              <li>
+                <a href="#">Criar Conta</a>
+              </li>
+              {% else %}
+              <li>
+                <a href="#">Realizar Pagamento</a>
+              </li>
+              <li>
+                <a href="#">Ver Saldo</a>
+              </li>
+              <li>
+                <a href="#">Ver Extrato</a>
+              </li>
+              {% endif %}
+            </ul>
+          </li>
             {%if current_user.level == 0 %}
             <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#conta"><i class="fa fa-user"></i> Minha Conta </a>
+                <a href="javascript:;" data-toggle="collapse" data-target="#conta"><i class="fa fa-user"></i> Minhas Conta </a>
                 <ul id="conta" class="collapse">
                     <li>
                         <a href="#">Ver Saldo</a>

@@ -22,9 +22,9 @@
           </div>
           {% endif %}
         {% endwith %}
-        <p> Nome: {{form.nome(class="form-control",value=agencia.nome)}}    </p>
-        <p> Estado: {{form.estado(class="form-control",value=agencia.estado)}}  </p>
-        <p> Cidade: {{form.cidade(class="form-control",value=agencia.cidade)}}  </p>
+        <label class="col-2 col-form-label"> Nome: {{form.nome(class="form-control",value=agencia.nome)}}    </label>
+        <label class="col-2 col-form-label"> Estado: {{form.estado(class="form-control",value=agencia.estado)}}  </label>
+        <label class="col-2 col-form-label"> Cidade: {{form.cidade(class="form-control",value=agencia.cidade)}}  </label>
         <br>
 
         <button type="submit" class="btn btn-lg btn-primary">Atualizar</button>

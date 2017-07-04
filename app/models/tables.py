@@ -17,6 +17,9 @@ class User(object):
     def get_id(self):
         return (self.id,self.is_func)
 
+    def getChoice(self):
+        return (str(self.num_func),self.nome) if self.is_func else (str(self.id),self.nome)
+
     def generate_password(self):
         self.password = generate_password_hash(self.password)
 
@@ -51,3 +54,14 @@ class Funcionario(object):
 
     def __repr__(self):
         return "Funcionario: "+self.nome+" -- num_funcional: "+self.num_func
+
+class Cliente(object):
+    def getChoice(self):
+        return (str(self.id),self.nome)
+
+    def __init__(self,args):
+        for key,value in args.items():
+            setattr(self, key, value)
+
+    def __repr__(self):
+        return "Cliente: "+self.nome+" -- id: "+self.id
