@@ -48,11 +48,11 @@ Para instalar e executar, siga os seguintes passos:
         ```  
 10. Realizar a criação do banco de dados  
         ```
-        $ flask initdb  
+        $ python3 run.py initdb  
         ```  
 11. Execute o programa   
         ```
-        $ python3 run.py  
+        $ python3 run.py runserver  
         ```  
 12. Para parar a execução, basta pressionar CTRL+C  
 13. Para sair do *virtualenv*  
