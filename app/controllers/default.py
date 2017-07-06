@@ -1,7 +1,7 @@
 from flask import render_template,redirect,url_for,flash,request,session
 from flask_login import login_user,logout_user, login_required, current_user
 from app import app,lm,conn
-from app.models.tables import User
+from app.models.tables import User, Operacao
 from app.models.forms import LoginForm, RegisterForm
 from app.models.decorators import verifica_autorizacao
 from psycopg2.extras import DictCursor
@@ -34,7 +34,40 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    operacoes = []
+    cupons = []
+    if not current_user.is_func:
+        cursor = conn.cursor(cursor_factory=DictCursor)
+        cursor.execute("SET search_path TO agencia")
+        try:
+            cursor.execute("""SELECT o.*
+                            FROM operacao_bancaria AS o
+                                INNER JOIN mantem_conta AS m
+                                    ON numero_co = numero AND o.agencia = m.agencia
+                                        WHERE cliente = '%s' ORDER BY data_op DESC LIMIT 10"""%(current_user.id))
+            di = cursor.fetchall()
+            for i in range(0,len(di)):
+                d = {}
+                for key,value in di[i]._index.items():
+                    d[key] = di[i][value]
+                operacoes += [Operacao(d)]
+            cursor.execute("""SELECT o.*
+                            FROM cupom AS o
+                                INNER JOIN mantem_conta AS m
+                                    ON numero_co = numero AND o.agencia = m.agencia
+                                        WHERE cliente = '%s' AND validade >= NOW() ORDER BY validade DESC"""%(current_user.id))
+            di = cursor.fetchall()
+            for i in range(0,len(di)):
+                d = {}
+                for key,value in di[i]._index.items():
+                    d[key] = di[i][value]
+                cupons += [Operacao(d)]
+        except Exception as error:
+            conn.rollback()
+            print(error)
+            flash('Tivemos um Problema')
+            return redirect('index')
+    return render_template('dashboard.html',o=operacoes,cupom=cupons)
 
 @app.route("/login",methods=["GET","POST"])
 def login():

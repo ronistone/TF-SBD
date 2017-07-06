@@ -46,11 +46,14 @@ CONSTRAINT fk_func_dependente FOREIGN KEY (id_func) REFERENCES funcionario(num_f
            ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE conta(
-  numero        integer NOT NULL,
+  numero        SERIAL,
   agencia       VARCHAR(50) NOT NULL,
-  data_criacao  date NOT NULL,
-  saldo         numeric(7,2) NOT NULL,
-  ultimo_acesso date NOT NULL,
+  data_criacao  DATE DEFAULT NOW(),
+  saldo         NUMERIC(10,2) DEFAULT 0.0,
+  ultimo_acesso TIMESTAMP DEFAULT NOW(),
+  is_corrente   BOOLEAN DEFAULT 'TRUE',
+  taxa    numeric(4,2), --- Poupança
+  tarifa  numeric(4,2), --- Corrente
   CONSTRAINT pk_conta         PRIMARY KEY(numero,agencia),
   CONSTRAINT fk_agencia_conta FOREIGN KEY (agencia) REFERENCES agencia(nome) MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -65,39 +68,23 @@ CREATE TABLE mantem_conta(
   CONSTRAINT fk_conta_conta   FOREIGN KEY (numero,agencia) REFERENCES conta(numero,agencia) MATCH SIMPLE
              ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-CREATE TABLE conta_poupanca(
-  numero  integer NOT NULL,
-  agencia VARCHAR(45) NOT NULL,
-  taxa    numeric(3,2) NOT NULL,
-  CONSTRAINT pk_conta_poupanca PRIMARY KEY (numero,agencia),
-  CONSTRAINT fk_conta_poupanca FOREIGN KEY (numero,agencia) REFERENCES conta(numero,agencia)MATCH SIMPLE
-             ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-CREATE TABLE conta_corrente(
-  numero  integer NOT NULL,
-  agencia VARCHAR(50) NOT NULL,
-  tarifa  numeric(3,2) NOT NULL,
-  CONSTRAINT pk_conta_corrente PRIMARY KEY (numero,agencia),
-  CONSTRAINT fk_conta_corrente FOREIGN KEY (numero,agencia) REFERENCES conta(numero,agencia)MATCH SIMPLE
-             ON UPDATE NO ACTION ON DELETE NO ACTION
-);
 CREATE TABLE operacao_bancaria(
-  numero_op   integer NOT NULL,
+  numero_op   SERIAL NOT NULL,
   numero_co   integer NOT NULL,
   agencia     VARCHAR(50) NOT NULL,
-  valor       numeric(5,2) NOT NULL,
+  valor       numeric(8,2) NOT NULL,
   descricao   VARCHAR(100) NOT NULL,
-  data_op     date NOT NULL,
+  data_op     TIMESTAMP DEFAULT NOW(),
   tipo        varchar(50) NOT NULL,
   CONSTRAINT pk_operacao_b      PRIMARY KEY (numero_op,numero_co, agencia),
-  CONSTRAINT fk_operacao_contac FOREIGN KEY(numero_co,agencia) REFERENCES conta_corrente(numero,agencia)MATCH SIMPLE
+  CONSTRAINT fk_operacao_contac FOREIGN KEY(numero_co,agencia) REFERENCES conta(numero,agencia)MATCH SIMPLE
              ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 CREATE TABLE cupom(
   numero_op     integer NOT NULL,
   numero_co     integer NOT NULL,
   agencia       VARCHAR(50) NOT NULL,
-  numero_cupom  integer NOT NULL,
+  numero_cupom  SERIAL NOT NULL,
   validade      date NOT NULL,
   CONSTRAINT pk_cupom PRIMARY KEY (numero_op,numero_co, agencia,numero_cupom),
   CONSTRAINT fk_cupom FOREIGN KEY(numero_op,numero_co,agencia) REFERENCES operacao_bancaria(numero_op,numero_co, agencia) MATCH SIMPLE
@@ -118,10 +105,69 @@ CREATE TABLE mantem_emprestimo(
   CONSTRAINT fk_emprestimo   FOREIGN KEY(id_emprestimo) REFERENCES emprestimo(id)
 );
 
+-----------------------------------------------------------------------
+----------                  STORE PROCEDURES                -----------
+-----------------------------------------------------------------------
 
 
 -----------------------------------------------------------------------
-----------                 POVOAMENTO                        ----------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+----------                     TRIGGERS                     -----------
+-----------------------------------------------------------------------
+
+-----     Criando Cupom ----------
+CREATE FUNCTION check_transacao() RETURNS trigger AS
+$$
+BEGIN
+  IF(NEW.valor > 5000) THEN
+    INSERT INTO cupom (numero_op,numero_co,agencia,validade)
+      VALUES(NEW.numero_op,NEW.numero_co,NEW.agencia,NOW() + INTERVAL '15 days');
+  END IF;
+  RETURN NULL;
+END;$$ language plpgsql;
+
+CREATE TRIGGER trig_cupom AFTER INSERT ON operacao_bancaria
+  FOR EACH ROW  EXECUTE PROCEDURE check_transacao();
+----------------------------------
+
+------ Atualizando Saldo ---------
+CREATE FUNCTION update_transacao() RETURNS trigger AS
+$$
+DECLARE temp record;
+BEGIN
+  IF(NEW.tipo = 'credito') THEN
+    UPDATE conta SET saldo = saldo + NEW.valor WHERE numero = NEW.numero_co AND agencia = NEW.agencia;
+  ELSIF(NEW.tipo = 'debito') THEN
+    FOR temp IN SELECT * FROM conta WHERE numero = NEW.numero_co AND agencia = NEW.agencia
+    LOOP
+      IF(temp.saldo < NEW.valor) THEN
+        RAISE NOTICE 'Saldo Insuficiente!';
+        RETURN NULL;
+      ELSE
+        UPDATE conta SET saldo = saldo - NEW.valor WHERE numero = NEW.numero_co AND agencia = NEW.agencia;
+      END IF;
+    END LOOP;
+  ELSE
+    RETURN NULL;
+  END IF;
+  RETURN NEW;
+END;$$ language plpgsql;
+
+CREATE TRIGGER trig_saldo BEFORE INSERT ON operacao_bancaria
+  FOR EACH ROW  EXECUTE PROCEDURE update_transacao();
+---------------------------------
+
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------
+----------                   POVOAMENTO                      ----------
 -----------------------------------------------------------------------
 
 INSERT INTO users(username,password,level,nome,telefone,is_func)  VALUES('roni','1234',3,'Roni','034991280104','TRUE');
@@ -137,3 +183,9 @@ INSERT INTO funcionario(num_func,nome_ag)
                                                     VALUES (3,'Banco Do Brasil');
 INSERT INTO cliente(cpf,data_nasc,endereco,cidade,estado,id,id_gerente)
                                                     VALUES('11525491628','05-09-1997','Rua Coronel Povoa, 795','Araguari','MG',4,2);
+INSERT INTO conta(agencia,tarifa)                   VALUES('Banco Do Brasil',11.50);
+INSERT INTO mantem_conta(cliente,numero,agencia)    VALUES(4,1,'Banco Do Brasil');
+INSERT INTO operacao_bancaria(numero_co,agencia,valor,descricao,tipo) VALUES(1,'Banco Do Brasil',10000.0,'Recebendo','credito');
+INSERT INTO operacao_bancaria(numero_co,agencia,valor,descricao,tipo) VALUES(1,'Banco Do Brasil',6000.0,'Pagando','debito');
+INSERT INTO operacao_bancaria(numero_co,agencia,valor,descricao,tipo) VALUES(1,'Banco Do Brasil',6000.0,'Pagando','debito');
+INSERT INTO operacao_bancaria(numero_co,agencia,valor,descricao,tipo) VALUES(1,'Banco Do Brasil',6000.0,'Pagando','debito');

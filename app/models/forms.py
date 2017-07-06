@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import *#StringField, PasswordField, BooleanField,TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import *#DataRequired, Email
 from app.static.data import estados,cidades
+
+########################		 LOGIN		###########################
 
 class RegisterForm(FlaskForm):
 	name = StringField("name", validators=[DataRequired()])
@@ -12,6 +14,10 @@ class LoginForm(FlaskForm):
 	username = StringField('username',validators=[DataRequired()])
 	password = PasswordField('password',validators=[DataRequired()])
 	remember_me = BooleanField('remember_me')
+
+######################################################################
+
+########################		 Create 		###########################
 
 class CreateAgenciaForm(FlaskForm):
 	name = StringField("Nome", validators=[DataRequired()])
@@ -34,8 +40,35 @@ class CreateClienteForm(FlaskForm):
 	city = SelectField("Cidade",choices=cidades,id="cidade")
 	state = SelectField("Estado",choices=estados, id="estado")
 
+class CreateContaForm1(FlaskForm):
+	agencia = SelectField("Agencia",id="agencia")
+	tipo = SelectField("tipoConta",choices=[("1","Corrente"),("2","Poupança")],id="tipoConta")
+
+class CreateContaForm(FlaskForm):
+	taxa = StringField('taxa')
+	tarifa = StringField('tarifa')
+	valorInicial = StringField('inicial')
+	users = SelectMultipleField('Usuarios')
+
+class CreateOperacaoForm(FlaskForm):
+	conta = SelectField('Conta', validators=[DataRequired()])
+	valor = StringField('valor',validators=[DataRequired()])
+	descricao = StringField('Descricao',validators=[DataRequired()])
+	senha = PasswordField('Sua Senha', validators=[DataRequired()])
+
+###########################################################################
+
+####################		GET		#######################################
+
 class GetAgenciaForm(FlaskForm):
 	agencia = SelectField("Agencia",id="agencia")
+
+class GetContaForm(FlaskForm):
+	conta = SelectField("Conta", id="conta")
+
+##########################################################################
+
+########################		 EDIT		###########################
 
 class EditAgenciaForm(FlaskForm):
 	nome = StringField("Nome",validators=[DataRequired()])
@@ -60,3 +93,5 @@ class EditClienteForm(FlaskForm):
 	telefone = StringField("telefone")
 	password = PasswordField('password')
 	youpassword = PasswordField('youpassword',validators=[DataRequired()])
+
+##########################################################################

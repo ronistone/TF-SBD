@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+          <br>
+          <br>
+      <form method="post" align="left">
+        {{form.csrf_token}}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="alert alert-warning" role="alert">
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        {% endwith %}
+        <br>
+
+          {% if tipo == "1" %}
+           <label class="col-2 col-form-label">Tarifa da Conta Corrente: {{ form.tarifa(class="form-control",placeholder="Tarifa da Conta") }}</label>
+          <br>
+          {% else %}
+           <label class="col-2 col-form-label">Taxa da poupança: {{ form.taxa(class="form-control", placeholder="Taxa da Conta") }}</label>
+          <br>
+          {% endif %}
+          <label class="col-2 col-form-label"> Valor Inicial da Conta: {{ form.valorInicial(class="form-control",value=0.0) }}</label>
+          <br>
+          <label class="col-2 col-form-label">Quem irá manter a conta?(Pressione Shift para selecionar mais de um usuário) {{ form.users(class="form-control",placeholder="Tarifa da Conta") }}</label>
+         <br>
+          <button type="submit" class="btn btn-lg btn-primary">Avançar</button>
+      </form>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+
+    </div>
+  </div>
+{% endblock %}

@@ -117,42 +117,28 @@
             {% endif %}
           {%endif%}
           <li>
-            <a href="javascript:;" data-toggle="collapse" data-target="#conta"><i class="fa fa-user"></i> Contas </a>
+            <a href="javascript:;" data-toggle="collapse" data-target="#conta"><i class="fa fa-user"></i>{% if current_user.level == 0%} Minhas {% endif %} Contas </a>
             <ul id="conta" class="collapse">
               {% if current_user.level > 0%}
               <li>
-                <a href="#">Criar Conta</a>
+                <a href="{{url_for('getConta',opcao='create')}}">Criar Conta</a>
               </li>
               {% else %}
               <li>
-                <a href="#">Realizar Pagamento</a>
+                <a href="/conta/get?opcao=get&op=pagamento">Realizar Pagamento</a>
               </li>
               <li>
-                <a href="#">Ver Saldo</a>
+                <a href="/conta/get?opcao=get&op=saldo">Ver Saldo</a>
               </li>
               <li>
-                <a href="#">Ver Extrato</a>
+                <a href="/conta/get?opcao=get&op=extrato">Ver Extrato</a>
+              </li>
+              <li>
+                  <a href="#">Empréstimo</a>
               </li>
               {% endif %}
             </ul>
           </li>
-            {%if current_user.level == 0 %}
-            <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#conta"><i class="fa fa-user"></i> Minhas Conta </a>
-                <ul id="conta" class="collapse">
-                    <li>
-                        <a href="#">Ver Saldo</a>
-                    </li>
-                    <li>
-                        <a href="#">Ver Extrato</a>
-                    </li>
-                    <li>
-                        <a href="#">Empréstimo</a>
-                    </li>
-                </ul>
-            </li>
-            {% endif %}
-
         </ul>
     </div>
     <!-- /.navbar-collapse -->

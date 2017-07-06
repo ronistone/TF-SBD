@@ -2,65 +2,67 @@
 -----------------------------------------------
 -- Criando o esquema universidade
 -----------------------------------------------
-DROP SCHEMA IF EXISTS banco CASCADE;
-CREATE SCHEMA banco;
-SET search_path TO banco;
+DROP SCHEMA IF EXISTS agencia CASCADE;
+CREATE SCHEMA agencia;
+SET search_path TO agencia;
 
-
--- CHECK('AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS',
-         --     'RO','RR','SC','SP','SE','TO'),
 -- -----------------------------------------------------
--- Tabela BANCO
+-- Tabela Agência
 -- -----------------------------------------------------
 
 CREATE TABLE agencia (
-id_agencia integer NOT NULL,
-cidade varchar(60) NOT NULL,
-estado varchar(2)  NOT NULL,
-CONSTRAINT pk_agencia PRIMARY KEY(id_agencia));
+id_agencia INTEGER     NOT NULL, 
+cidade     VARCHAR(60) NOT NULL,
+estado     VARCHAR(2)  NOT NULL, 
+CONSTRAINT pk_agencia PRIMARY KEY(id_agencia)); 
 
 CREATE TABLE funcionario(
-id_funcionario integer NOT NULL,
-nome varchar(100) NOT NULL,
-data_adm date NOT NULL,
-tempo_servico integer NOT NULL,
-telefone varchar(11) NOT NULL,
-supervisor integer NOT NULL,
-trabalha integer NOT NULL,
+id_funcionario INTEGER      NOT NULL,
+username       VARCHAR(30)  UNIQUE NOT NULL,
+password       VARCHAR(50)  NOT NULL,
+nome           VARCHAR(100) NOT NULL,
+telefone       CHAR(11)     NOT NULL,
+data_adm       DATE         NOT NULL,
+tempo_servico  INTEGER      NOT NULL,
+supervisor     INTEGER      NOT NULL,
+trabalha       INTEGER      NOT NULL,
 CONSTRAINT pk_funcionario PRIMARY KEY (id_funcionario),
 CONSTRAINT fk_supervisor FOREIGN KEY (supervisor) REFERENCES funcionario (id_funcionario) MATCH SIMPLE
            ON UPDATE CASCADE ON DELETE NO ACTION,
 CONSTRAINT fk_trabalha FOREIGN KEY (trabalha) REFERENCES agencia(id_agencia) MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION);
 
-
+      
 CREATE TABLE cliente(
-id_cliente integer NOT NULL,
-CPF varchar(11) NOT NULL,
-nome varchar(100) NOT NULL,
-data_nascimento date NOT NULL,
-endereco varchar(100) NOT NULL,
-cidade varchar(100) NOT NULL,
-estado varchar(2) NOT NULL,
-gerente integer NOT NULL,
+id_cliente      INTEGER      NOT NULL,
+username        VARCHAR(30)  UNIQUE NOT NULL,
+password        VARCHAR(50)  NOT NULL,
+nome            VARCHAR(100) NOT NULL,
+telefone        CHAR(11)     NOT NULL,
+CPF             VARCHAR(11)  NOT NULL,
+data_nascimento DATE         NOT NULL,
+endereco        VARCHAR(100) NOT NULL,
+cidade          VARCHAR(100) NOT NULL,
+estado          VARCHAR(2)   NOT NULL,
+gerente         INTEGER      NOT NULL,
 CONSTRAINT pk_cliente PRIMARY KEY (id_cliente),
 CONSTRAINT fk_gerente FOREIGN KEY (gerente) REFERENCES funcionario (id_funcionario) MATCH SIMPLE
            ON UPDATE CASCADE ON DELETE NO ACTION);
 
 CREATE TABLE dependente(
-id_func integer NOT NULL,
-nome_depe varchar(100) NOT NULL,
+id_func   INTEGER      NOT NULL,
+nome_depe VARCHAR(100) NOT NULL,
 CONSTRAINT pk_dependente PRIMARY KEY (id_func,nome_depe),
 CONSTRAINT fk_func_dependente FOREIGN KEY (id_func)REFERENCES funcionario(id_funcionario) MATCH SIMPLE
-           ON UPDATE DELETE ON DELETE CASCADE);
+           ON UPDATE NO ACTION ON DELETE CASCADE);
 
 
 CREATE TABLE conta(
-numero integer NOT NULL,
-agencia integer NOT NULL,
-data_criacao date NOT NULL,
-saldo numeric(7,2) NOT NULL,
-ultimo_acesso date NOT NULL,
+numero        INTEGER            NOT NULL,
+agencia       INTEGER            NOT NULL,
+data_criação  DATE               NOT NULL,
+saldo         NUMERIC(7,2)       NOT NULL,
+ultimo_acesso DATE               NOT NULL,
 CONSTRAINT pk_conta PRIMARY KEY(numero,agencia),
 CONSTRAINT fk_agencia_conta FOREIGN KEY (agencia) REFERENCES agencia(id_agencia) MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION);
@@ -68,9 +70,9 @@ CONSTRAINT fk_agencia_conta FOREIGN KEY (agencia) REFERENCES agencia(id_agencia)
 
 
 CREATE TABLE conta_cliente(
-cliente integer NOT NULL,
-numero integer NOT NULL,
-agencia integer NOT NULL,
+cliente INTEGER NOT NULL,
+numero  INTEGER NOT NULL,
+agencia INTEGER NOT NULL,
 CONSTRAINT pk_conta_cliente PRIMARY KEY(cliente,numero,agencia),
 CONSTRAINT fk_conta_c FOREIGN KEY (cliente) REFERENCES cliente(id_cliente) MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -78,43 +80,61 @@ CONSTRAINT fk_conta_conta FOREIGN KEY (numero,agencia) REFERENCES conta(numero,a
            ON UPDATE NO ACTION ON DELETE NO ACTION);
 
 CREATE TABLE conta_poupanca(
-numero integer NOT NULL,
-agencia integer NOT NULL,
-taxa numeric(3,2) NOT NULL,
+numero  INTEGER NOT NULL,
+agencia INTEGER NOT NULL,
+taxa    NUMERIC(3,2) NOT NULL, --PORCENTAGEM
 CONSTRAINT pk_conta_poupanca PRIMARY KEY (numero,agencia),
 CONSTRAINT fk_conta_poupanca FOREIGN KEY (numero,agencia) REFERENCES conta(numero,agencia)MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION);
 
 CREATE TABLE conta_corrente(
-numero integer NOT NULL,
-agencia integer NOT NULL,
-tarifa numeric(3,2) NOT NULL,
+numero  INTEGER      NOT NULL,
+agencia INTEGER      NOT NULL,
+tarifa  NUMERIC(5,2) NOT NULL, --VALORES
 CONSTRAINT pk_conta_corrente PRIMARY KEY (numero,agencia),
 CONSTRAINT fk_conta_corrente FOREIGN KEY (numero,agencia) REFERENCES conta(numero,agencia)MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION);
 
 CREATE TABLE operacao_bancaria(
-numero_op integer NOT NULL,
-numero_co integer NOT NULL,
-agencia integer NOT NULL,
-valor numeric(5,2) NOT NULL,
-descricao VARCHAR(100) NOT NULL,
-data_op date NOT NULL,
-tipo varchar(50) NOT NULL,
+numero_op INTEGER       NOT NULL,
+numero_co INTEGER       NOT NULL,
+agencia   INTEGER       NOT NULL,
+valor     NUMERIC(10,2) NOT NULL,
+descricao VARCHAR(100)  NOT NULL,
+data_op   DATE          NOT NULL,
+tipo      VARCHAR(50)   NOT NULL,
 CONSTRAINT pk_operacao_b PRIMARY KEY (numero_op,numero_co, agencia),
 CONSTRAINT fk_operacao_contac FOREIGN KEY(numero_co,agencia) REFERENCES conta_corrente(numero,agencia)MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION);
 
 CREATE TABLE cupom(
-numero_op integer NOT NULL,
-numero_co integer NOT NULL,
-agencia integer NOT NULL,
-numero_cupom integer NOT NULL,
-validade date NOT NULL,
+numero_op     INTEGER NOT NULL,
+numero_co     INTEGER NOT NULL,
+agencia       INTEGER NOT NULL,
+numero_cupom  INTEGER NOT NULL,
+validade      DATE    NOT NULL,
 CONSTRAINT pk_cupom PRIMARY KEY (numero_op,numero_co, agencia,numero_cupom),
 CONSTRAINT fk_cupom FOREIGN KEY(numero_op,numero_co,agencia) REFERENCES operacao_bancaria(numero_op,numero_co, agencia) MATCH SIMPLE
            ON UPDATE NO ACTION ON DELETE NO ACTION);
 
+
+CREATE TABLE emprestimo(
+  id            INTEGER      NOT NULL,
+  valor         NUMERIC(10,2) NOT NULL,
+  qtd_parcelas  INTEGER      NOT NULL,
+  agencia       INTEGER  NOT NULL,
+  CONSTRAINT pk_empresimo PRIMARY KEY(id),
+  CONSTRAINT fk_emprestimo FOREIGN KEY(agencia) REFERENCES agencia(id_agencia) MATCH SIMPLE
+             ON UPDATE NO ACTION ON DELETE NO ACTION);
+             
+CREATE TABLE mantem_emprestimo(
+  id_cliente    INTEGER NOT NULL,
+  id_emprestimo INTEGER NOT NULL,
+  CONSTRAINT pk_m_emprestimo PRIMARY KEY(id_cliente,id_emprestimo),
+  CONSTRAINT fk_cliente      FOREIGN KEY(id_cliente)    REFERENCES cliente(id_cliente) MATCH SIMPLE
+             ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_emprestimo   FOREIGN KEY(id_emprestimo) REFERENCES emprestimo(id) MATCH SIMPLE
+             ON UPDATE NO ACTION ON DELETE NO ACTION);
 
 
 

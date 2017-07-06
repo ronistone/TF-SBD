@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_script import Manager
 from psycopg2.extras import DictCursor
 import psycopg2
 import os
@@ -9,7 +10,7 @@ locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
 
 app = Flask(__name__)
 app.config.from_object('config')
-
+manager = Manager(app)
 lm = LoginManager()
 lm.init_app(app)
 
@@ -20,31 +21,27 @@ print('Conexão Aberta!')
 
 
 
-from app.controllers import default, agencia, funcionario, cliente
+from app.controllers import default, agencia, funcionario, cliente, conta
 from app.models import tables
 
-@app.cli.command()
+@manager.command
 def initdb():
     cursor = conn.cursor(cursor_factory=DictCursor)
-    fopen= open('db.sql','r')
-    script = fopen.read()
-    fopen.close()
-
-    sqlcommands = script.split(';')
-    for command in sqlcommands[0:len(sqlcommands)-1]:
-        try:
-            cursor.execute(command+';')
-        except Exception as msg:
-            print("Erro: ",msg)
-    conn.commit()
-    cursor.execute("SELECT * FROM users")
-    usuario = cursor.fetchall()
-    for u in usuario:
-        user = tables.User(u)
-        user.generate_password()
-        cursor.execute("UPDATE users SET password = '"+user.password+"';")
+    try:
+        cursor.execute(open("db.sql","r").read())
         conn.commit()
-    conn.close()
+        #############   Criptografando senhas   ###############
+        cursor.execute("SELECT * FROM users")
+        usuario = cursor.fetchall()
+        for u in usuario:
+            user = tables.User(u)
+            user.generate_password()
+            cursor.execute("UPDATE users SET password = '%s'"%(user.password))
+            conn.commit()
+        ########################################################
+        conn.close()
+    except Exception as error:
+        print(error)
     print("Conexão Fechada!")
     print("Tudo Pronto!")
 

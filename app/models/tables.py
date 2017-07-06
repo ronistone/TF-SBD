@@ -65,3 +65,25 @@ class Cliente(object):
 
     def __repr__(self):
         return "Cliente: "+self.nome+" -- id: "+self.id
+
+class Conta(object):
+    def getChoice(self):
+        return (str(str(self.numero)+";"+self.agencia),str(self.numero)+ " - " +self.agencia)
+
+    def __init__(self,args):
+        for key,value in args.items():
+            setattr(self, key, value)
+
+    def __repr__(self):
+        return "Conta -- numero: "+str(self.numero)+" -- agencia: "+self.agencia
+
+class Operacao(object):
+    #def getChoice(self):
+    #    return (str(self.numero_op+";"+self.numero_co+";"+self.agencia),self.num + " - " +self.agencia)
+
+    def __init__(self,args):
+        for key,value in args.items():
+            setattr(self, key, value)
+
+    def __repr__(self):
+        return "Operação -- num: "+str(self.numero_op)+" -- conta: "+str(self.numero_co)+" agencia: "+self.agencia
