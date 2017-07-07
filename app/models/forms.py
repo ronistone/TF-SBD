@@ -56,6 +56,16 @@ class CreateOperacaoForm(FlaskForm):
 	descricao = StringField('Descricao',validators=[DataRequired()])
 	senha = PasswordField('Sua Senha', validators=[DataRequired()])
 
+class CreateEmprestimoForm(FlaskForm):
+	agencia = SelectField('agencia', validators=[DataRequired()])
+	conta = SelectField('conta', validators=[DataRequired()])
+	valor = StringField('valor',validators=[DataRequired()])
+	parcelas = SelectField('parcelas',choices=[("3","3"),("6","6"),
+												("12","12"),("24","24"),
+												("30","30"),("36","36"),
+												("42","42"),("48","48")],validators=[DataRequired()])
+	pessoas = SelectMultipleField('pessoas',validators=[DataRequired()])
+	senha = PasswordField('Sua Senha', validators=[DataRequired()])
 ###########################################################################
 
 ####################		GET		#######################################

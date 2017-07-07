@@ -72,7 +72,7 @@ CREATE TABLE operacao_bancaria(
   numero_op   SERIAL NOT NULL,
   numero_co   integer NOT NULL,
   agencia     VARCHAR(50) NOT NULL,
-  valor       numeric(8,2) NOT NULL,
+  valor       numeric(13,2) NOT NULL,
   descricao   VARCHAR(100) NOT NULL,
   data_op     TIMESTAMP DEFAULT NOW(),
   tipo        varchar(50) NOT NULL,
@@ -91,8 +91,8 @@ CREATE TABLE cupom(
              ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 CREATE TABLE emprestimo(
-  id            INTEGER PRIMARY KEY,
-  valor         NUMERIC(5,2) NOT NULL,
+  id            SERIAL PRIMARY KEY,
+  valor         NUMERIC(13,2) NOT NULL,
   qtd_parcelas  INTEGER NOT NULL,
   agencia       VARCHAR(50),
   CONSTRAINT fk_emprestimo FOREIGN KEY(agencia) REFERENCES agencia(nome) ON DELETE NO ACTION

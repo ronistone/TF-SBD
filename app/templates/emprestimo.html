@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div id="page-wrapper">
+    <div class="container-fluid">
+          <br>
+          <br>
+      <form method="post" align="left">
+        {{form.csrf_token}}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="alert alert-warning" role="alert">
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        {% endwith %}
+        <br>
+           <label class="col-2 col-form-label">Qual agência você deseja pedir o empréstimo? {{ form.agencia(class="form-control") }}</label>
+           <br>
+           <label class="col-2 col-form-label">Conta a ser créditada: {{ form.conta(class="form-control") }}</label>
+           <br>
+           <label class="col-2 col-form-label"> Valor do empréstimo: {{ form.valor(class="form-control",value=0.0) }}</label>
+           <br>
+            <label class="col-2 col-form-label">Parcelas: {{ form.parcelas(class="form-control") }}</label>
+          <br>
+           <label class="col-2 col-form-label">Quem irá manter o empréstimo?(Shift para selecionar várias pessoas) {{ form.pessoas(class="form-control")}}</label>
+          <br>
+          <label class="col-2 col-form-label">Sua senha {{ form.senha(class="form-control") }}</label>
+         <br>
+          <button type="submit" class="btn btn-lg btn-primary">Tudo Pronto!</button>
+      </form>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+
+    </div>
+  </div>
+{% endblock %}
