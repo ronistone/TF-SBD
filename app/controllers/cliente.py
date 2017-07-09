@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from app import app,conn
 from app.models.decorators import verifica_autorizacao,verifica_autorizacao_or_is_user, verifica_autorizacao_num
 from app.models.forms import CreateClienteForm, EditClienteForm
-from app.models.tables import Agencia, Funcionario, User, Cliente
+from app.models.tables import Agencia, Funcionario, User, Cliente, Conta
 from psycopg2.extras import DictCursor
 from psycopg2 import IntegrityError
 
@@ -130,9 +130,9 @@ def editCliente(num_func):
             us = ["password","telefone","nome"]
             insert = ""
             for key,value in form.data.items():
-                if key in func and (type(value) is str and len(value) > 1 or type(value) != str):
+                if key in func and (type(value) is str and len(value) > 0 or type(value) != str):
                     insert += "%s = '%s',"%(key,value)
-
+            print(insert)
             cursor.execute("""UPDATE cliente
                             SET %s
                             WHERE id = %r""" %(insert[0:len(insert)-1],num_func))
@@ -156,7 +156,7 @@ def editCliente(num_func):
     return render_template('editCliente.html',form=form,user=user)
 
 
-@app.route('/cliente/edit/<int:num_func>', endpoint='deleteCliente')
+@app.route('/cliente/delete/<int:num_func>', endpoint='deleteCliente')
 @login_required
 @verifica_autorizacao_num(2)
 def deleteCliente(num_func):
@@ -171,3 +171,27 @@ def deleteCliente(num_func):
     except Exception as error:
         flash("Tivemos um problema, tente novamente!")
         return redirect(url_for('getCliente '))
+
+@app.route('/cliente/contas/<int:num_func>', endpoint='contasCliente')
+@login_required
+@verifica_autorizacao_num(1)
+def contasCliente(num_func):
+    cursor = conn.cursor(cursor_factory=DictCursor)
+    cursor.execute("SET search_path TO agencia")
+    try:
+        cursor.execute("""SELECT c.* FROM conta AS c INNER JOIN mantem_conta AS mc
+                        ON c.numero = mc.numero AND c.agencia = mc.agencia
+                            WHERE cliente = '%s'"""%(num_func))
+        di = cursor.fetchall()
+        contas = []
+        for i in range(0,len(di)):
+            d = {}
+            for key,value in di[i]._index.items():
+                d[key] = di[i][value]
+            contas += [Conta(d)]
+        return render_template('contas.html',contas=contas)
+    except Exception as error:
+        print(error)
+        conn.rollback()
+        flash("Tivemos um problema, tente novamente!")
+        return redirect(url_for('dashboard'))

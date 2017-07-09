@@ -1,7 +1,7 @@
 from flask import render_template,redirect,url_for,flash,request,session
 from flask_login import login_user,logout_user, login_required, current_user
 from app import app,lm,conn
-from app.models.tables import User, Operacao
+from app.models.tables import User, Operacao, Cliente
 from app.models.forms import LoginForm, RegisterForm
 from app.models.decorators import verifica_autorizacao
 from psycopg2.extras import DictCursor
@@ -27,19 +27,19 @@ def user_loader(id):
         return None
 
 
-@app.route('/')
+@app.route('/', endpoint='index')
 def index():
     return render_template('index.html')
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    operacoes = []
-    cupons = []
-    if not current_user.is_func:
-        cursor = conn.cursor(cursor_factory=DictCursor)
-        cursor.execute("SET search_path TO agencia")
-        try:
+    cursor = conn.cursor(cursor_factory=DictCursor)
+    cursor.execute("SET search_path TO agencia")
+    try:
+        if not current_user.is_func:
+            operacoes = []
+            cupons = []
             cursor.execute("""SELECT o.*
                             FROM operacao_bancaria AS o
                                 INNER JOIN mantem_conta AS m
@@ -62,12 +62,25 @@ def dashboard():
                 for key,value in di[i]._index.items():
                     d[key] = di[i][value]
                 cupons += [Operacao(d)]
-        except Exception as error:
-            conn.rollback()
-            print(error)
-            flash('Tivemos um Problema')
-            return redirect('index')
-    return render_template('dashboard.html',o=operacoes,cupom=cupons)
+            return render_template('dashboard.html',o=operacoes,cupom=cupons)
+        else:
+            clientes = []
+            cursor.execute("""SELECT c.*,u.nome
+                            FROM cliente AS c INNER JOIN users AS u
+                                ON c.id = u.id
+                                WHERE id_gerente = '%s'"""%(current_user.num_func))
+            di = cursor.fetchall()
+            for i in range(0,len(di)):
+                d = {}
+                for key,value in di[i]._index.items():
+                    d[key] = di[i][value]
+                clientes += [Cliente(d)]
+            return render_template('dashboard.html',clientes=clientes)
+    except Exception as error:
+        conn.rollback()
+        print(error)
+        flash('Tivemos um Problema')
+        return redirect(url_for('index'))
 
 @app.route("/login",methods=["GET","POST"])
 def login():

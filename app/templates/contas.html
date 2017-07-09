@@ -22,42 +22,29 @@
         <thead>
         <tr>
           <th class="text-center">
-            Operação #<br>
-          </th>
-          <th class="text-center">
-            Conta #<br>
+            Numero<br>
           </th>
           <th class="text-center">
             Agência<br>
           </th>
           <th class="text-center">
-            Descrição<br>
+            Data Criação<br>
           </th>
           <th class="text-center">
-            Data<br>
+            Ultimo Acesso<br>
           </th>
-          <th class="text-center">
-            Hora<br>
-          </th>
-          <th class="text-center">
-            Valor<br>
-          </th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
-          {% for o in operacoes%}
-        <tr>
-          <td>{{o.numero_op}}</td>
-          <td>{{o.numero_co}}</td>
-          <td>{{o.agencia}}</td>
-          <td>{{o.descricao}}</td>
-          <td>{{o.data_op.strftime("%d %B %Y")}}</td>
-          <td>{{o.data_op.strftime("%H:%M")}}</td>
-          {% if o.tipo == "debito"%}
-          <td><font size=2 color="#ff0000"> - {{o.valor}}</font></td>
-          {% else %}
-          <td><font size=2 color="#0040ff">+ {{o.valor}}</font></td>
-          {% endif %}
+          {% for conta in contas%}
+
+        <tr align=center>
+          <td>{{conta.numero}}</td>
+          <td>{{conta.agencia}}</td>
+          <td>{{conta.data_criacao.strftime("%d de %B %Y")}}</td>
+          <td>{{conta.ultimo_acesso.strftime("%d de %B %Y")}}</td>
+          <td><a href="{{url_for('extratoConta',conta=(conta.numero|string +";"+conta.agencia))}}" class="btn btn-info" role="button">Extrato</a>
         </tr>
         {% endfor %}
         </tbody>

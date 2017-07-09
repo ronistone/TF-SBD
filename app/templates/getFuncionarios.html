@@ -51,7 +51,7 @@
           <th class="text-center" scope="row">{{funcionario.num_func}}</th>
           <td>{{funcionario.nome}}</td>
           <td>{{funcionario.telefone}}</td>
-          <td>{{funcionario.data_admissao.strftime("%w de %B %Y")}}</td>
+          <td>{{funcionario.data_admissao.strftime("%d de %B %Y")}}</td>
           <td>{{funcionario.nome_ag}}</td>
           <td>{{funcionario.username}}</td>
           {% if current_user.level >= 2 or funcionario.num_func == current_user.num_func %}

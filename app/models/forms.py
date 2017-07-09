@@ -91,7 +91,7 @@ class EditFuncionarioForm(FlaskForm):
 	level = SelectField("acesso", choices=[('0',"Cliente"),('1',"Funcionario"),('2',"Gerente"),('3',"Administrador")],id="acesso")
 	password = PasswordField('password')
 	youpassword = PasswordField('youpassword',validators=[DataRequired()])
-	supervisor = SelectField("supervisor",id="supervisor")
+	id_gerente = SelectField("id_gerente",id="supervisor")
 
 class EditClienteForm(FlaskForm):
 	id_gerente = SelectField("Gerente",id="gerente")

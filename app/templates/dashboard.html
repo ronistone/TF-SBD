@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="row">
-
+                  {% if not current_user.is_func %}
                     <div class="col-lg-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -44,7 +44,7 @@
                               {% for c in cupom %}
                                 <div class="list-group">
                                     <a class="list-group-item">
-                                        <span class="badge">{{c.validade.strftime("%w %b %y")}}</span>
+                                        <span class="badge">{{c.validade.strftime("%d %b %y")}}</span>
                                         <i class="fa fa-fw fa-money"></i> Codigo:{{c.numero_cupom}}<br>
                                                                           Conta: {{c.numero_co}}<br>
                                                                           Agencia: {{c.agencia}}
@@ -78,7 +78,7 @@
                                                 <td><font size=2>{{op.numero_op}}</font></td>
                                                 <td><font size=2>{{op.numero_co}}</font></td>
                                                 <td><font size=2>{{op.agencia}}</font</td>
-                                                <td><font size=2>{{op.data_op.strftime("%w %b %y")}}</font></td>
+                                                <td><font size=2>{{op.data_op.strftime("%d %b %y")}}</font></td>
                                                 <td><font size=2>{{op.data_op.strftime("%H:%M")}}</font></td>
                                                 {% if op.tipo == "debito"%}
                                                 <td><font size=2 color="#ff0000">- {{op.valor}}</font></td>
@@ -96,6 +96,30 @@
                             </div>
                         </div>
                     </div>
+                  {% else%}
+                    <div class="col-lg-5">
+                      <div class="panel panel-default">
+                          <div class="panel-heading">
+                              <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Clientes</h3>
+                          </div>
+                          <div class="panel-body">
+                            {% if clientes %}
+                            {% for c in clientes %}
+                              <div class="list-group">
+                                  <a href="{{url_for('contasCliente',num_func=c.id)}}"class="list-group-item">
+                                      <span class="badge">{{c.data_nasc.strftime("%d %b %y")}}</span>
+                                      <i class="fa fa-fw fa-money"></i> Nome:{{c.nome}}<br>
+                                  </a>
+                              </div>
+                              {% endfor%}
+                            {% else%}
+                              Você ainda não tem clientes :(
+                            {%endif%}
+                          </div>
+                      </div>
+                    </div>
+
+                  {% endif %}
                 </div>
                 <!-- /.row -->
 
